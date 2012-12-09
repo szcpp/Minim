@@ -1,3 +1,7 @@
+#include <cstdlib>
+
+#define CHROMOSOME_LENGTH 10
+
 class Algorithm
 {
 private:
@@ -16,4 +20,5 @@ public:
 		_populationSize(populationSize)
 	{}
 	~Algorithm(){}
+	void Mutate();
 };
