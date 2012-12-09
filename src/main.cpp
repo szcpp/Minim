@@ -17,12 +17,10 @@ int main()
 	cout << "\tpc:\t\t" << configFile.getValueOfKey<float>("pc") << endl;
 	cout << "\tpm:\t\t" << configFile.getValueOfKey<float>("pm") << endl;
 	cout << "\talpha:\t\t" <<  configFile.getValueOfKey<float>("alpha") << endl;
-	cout << "\tbeta:\t\t" <<  configFile.getValueOfKey<float>("beta") << endl;
 	cout << "\tpopulation:\t" <<  configFile.getValueOfKey<unsigned short>("population_size") << endl;
 
 	Algorithm a(
 		configFile.getValueOfKey<float>("alpha"),
-		configFile.getValueOfKey<float>("beta"),
 		configFile.getValueOfKey<float>("pc"),
 		configFile.getValueOfKey<float>("pm"),
 		configFile.getValueOfKey<unsigned short>("population_size"));

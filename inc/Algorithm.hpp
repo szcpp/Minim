@@ -2,6 +2,7 @@
 #include <cmath>
 
 #define CHROMOSOME_LENGTH 10
+#define DR 100*sqrt(2)/pow(2,CHROMOSOME_LENGTH)
 
 class Algorithm
 {
@@ -11,9 +12,10 @@ private:
 	float _pc;
 	float _pm;
 	unsigned short _populationSize;
+	unsigned short _chromosomeChild[10000];
 	unsigned short _chromosome[10000]; // byc moze przerobic na tablice dynamiczna?
 public:
-	Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize);
+	Algorithm(float alpha, float pc, float pm, unsigned int populationSize);
 	~Algorithm(){}
 
 	float GetAlpha() const { return _alpha; }
@@ -31,4 +33,6 @@ public:
 	void Crossover(const Algorithm&, Algorithm&, Algorithm&) const;
 	void Mutate();
 	void Reproduce();
+	void SetFitness();
+	float Fitness(float r);
 };

@@ -1,12 +1,12 @@
 #include "Algorithm.hpp"
 
-Algorithm::Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize) : 
+Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSize) : 
 		_alpha(alpha),
-		_beta(beta),
 		_pc(pc),
 		_pm(pm),
 		_populationSize(populationSize)
 {
+	SetFitness(); //początkowa normalizacja funkcji celu
 	for(unsigned int iter = 0; iter < _populationSize; ++iter)
 		_chromosome[iter] = drand48()*pow(2,CHROMOSOME_LENGTH);
 }
@@ -25,8 +25,33 @@ void Algorithm::Mutate()
 
 void Algorithm::Reproduce()
 {
-	
+	unsigned short int childSize = 0;
+	for(unsigned int iterPop = 0; iterPop<_populationSize; ++iterPop)
+	{
+		for( unsigned int iterRep = 0;
+			iterRep< Fitness(_chromosome[iterPop]) * _populationSize; //obliczanie funkcji celu dla kazdego chromosomu
+			++iterRep ) 
+		{
+			_chromosome[childSize] = _chromosome[iterPop];
+			childSize++;
+		}
+	}
+	for(unsigned int iterPop = 0; iterPop<_populationSize; ++iterPop)
+		_chromosome[iterPop] = _chromosomeChild[iterPop];
 	return;
+}
+
+void Algorithm::SetFitness()
+{
+	float C = 0;
+	for(unsigned int iter = 0; iter < pow(2,CHROMOSOME_LENGTH); ++iter)
+		C += _alpha*( pow(sin(iter*DR),2)-0.5 ) / pow( 1+0.001*pow(iter*DR,2) ,2);
+	_beta = (1-C) / (100*sqrt(2));
+}
+
+float Algorithm::Fitness(float r)
+{
+	return _alpha*( pow(sin(r*DR),2)-0.5 ) / pow( 1+0.001*pow(r*DR,2) ,2) + _beta;
 }
 
 void Algorithm::InternalCrossover()
