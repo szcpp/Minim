@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cmath>
 
 #define CHROMOSOME_LENGTH 10
 
@@ -9,16 +10,10 @@ private:
 	float _beta;
 	float _pc;
 	float _pm;
-	unsigned int _populationSize;
-	unsigned short int _chromosome[10000]; // byc moze przerobic na tablice dynamiczna?
+	unsigned short _populationSize;
+	unsigned short _chromosome[10000]; // byc moze przerobic na tablice dynamiczna?
 public:
-	Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize) : 
-		_alpha(alpha),
-		_beta(beta),
-		_pc(pc),
-		_pm(pm),
-		_populationSize(populationSize)
-	{}
+	Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize);
 	~Algorithm(){}
 
 	float GetAlpha() const { return _alpha; }
@@ -32,5 +27,8 @@ public:
 	float GetPopulationSize() const {return _populationSize; }
 	void SetPopulationSize(const float &populationSize) { _populationSize = populationSize; }
 
+	void InternalCrossover();
 	void Crossover(const Algorithm&, Algorithm&, Algorithm&) const;
+	void Mutate();
+	void Reproduce();
 };
