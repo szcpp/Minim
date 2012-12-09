@@ -28,5 +28,6 @@ int main()
 		configFile.getValueOfKey<unsigned int>("population_size"));
 
 	cout << endl << "\tMem size:\t" << (sizeof a)/1000 << "K" << endl;
+
 	return 0;
 }

@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cmath>
 
 #define CHROMOSOME_LENGTH 10
 
@@ -12,13 +13,8 @@ private:
 	unsigned int _populationSize;
 	unsigned short int _chromosome[10000]; // byc moze przerobic na tablice dynamiczna?
 public:
-	Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize) : 
-		_alpha(alpha),
-		_beta(beta),
-		_pc(pc),
-		_pm(pm),
-		_populationSize(populationSize)
-	{}
+	Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize);
 	~Algorithm(){}
 	void Mutate();
+	void Reproduce();
 };
