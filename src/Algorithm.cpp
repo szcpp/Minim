@@ -8,6 +8,7 @@ Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSiz
 		_populationSize(populationSize),
 		_maximumIterationCount(maximumIteractionCount)
 {
+	NormalizeFitness(); //początkowa normalizacja funkcji celu
 	for(unsigned int iter = 0; iter < _populationSize; ++iter)
 		_chromosome[iter] = drand48()*pow(2,CHROMOSOME_LENGTH);
 }
@@ -26,8 +27,39 @@ void Algorithm::Mutate()
 
 void Algorithm::Reproduce()
 {
-	
+	float norm = 0;
+	unsigned short i = 0;
+	unsigned short j = 0;
+	for(i = 0; i < _populationSize; ++i)
+		norm += _roulette[i] = GetFitness(_chromosome[i]);
+
+	for(i = 0; i < _populationSize; ++i)
+	{
+		do
+		{
+			j = round(drand48()*_populationSize);
+		}
+		while(drand48()*norm >= _roulette[j]);
+		_chromosomeChild[i] = _chromosome[j];
+	}
+
+	for(i = 0; i < _populationSize; ++i)
+		_chromosome[i] = _chromosomeChild[i];
+
 	return;
+}
+
+void Algorithm::NormalizeFitness()
+{
+	float C = 0;
+	for(unsigned int iter = 0; iter < pow(2,CHROMOSOME_LENGTH); ++iter)
+		C += _alpha*( pow(sin(iter*DR),2)-0.5 ) / pow( 1+0.001*pow(iter*DR,2) ,2);
+	_beta = (1-C) / (100*sqrt(2));
+}
+
+float Algorithm::GetFitness(unsigned short r)
+{
+	return _alpha*( pow(sin(1.*r*DR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*DR,2),2) + _beta;
 }
 
 void Algorithm::Crossover()
@@ -55,5 +87,6 @@ void Algorithm::Launch()
 		Reproduce();
 		Crossover();
 		Mutate();
+		std::cout << "i:\t" << i << " /\t" << _maximumIterationCount << std::endl;
 	}
 }

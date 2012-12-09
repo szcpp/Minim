@@ -17,7 +17,6 @@ int main()
 	cout << "\tpc:\t\t" << configFile.getValueOfKey<float>("pc") << endl;
 	cout << "\tpm:\t\t" << configFile.getValueOfKey<float>("pm") << endl;
 	cout << "\talpha:\t\t" <<  configFile.getValueOfKey<float>("alpha") << endl;
-	cout << "\tbeta:\t\t" <<  configFile.getValueOfKey<float>("beta") << endl;
 	cout << "\tpopulation:\t" <<  configFile.getValueOfKey<unsigned short>("population_size") << endl;
 
 	Algorithm a(
@@ -28,6 +27,8 @@ int main()
 		configFile.getValueOfKey<unsigned long>("maximum_iteration_count"));
 
 	cout << endl << "\tMem size:\t" << (sizeof a)/1000 << "K" << endl;
+
+	a.Launch();
 
 	return 0;
 }
