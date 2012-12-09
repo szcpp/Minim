@@ -1,3 +1,7 @@
+#include <cstdlib>
+
+#define CHROMOSOME_LENGTH 10
+
 class Algorithm
 {
 private:
@@ -16,4 +20,17 @@ public:
 		_populationSize(populationSize)
 	{}
 	~Algorithm(){}
+
+	float GetAlpha() const { return _alpha; }
+	void SetAlpha(const float &alpha) {	_alpha = alpha; }
+	float GetBeta() const {return _beta; }
+	void SetBeta(const float &beta) { _beta = beta; }
+	float GetPc() const {return _pc; }
+	void SetPc(const float &pc) { _pc = pc; }
+	float GetPm() const {return _pm; }
+	void SetPm(const float &pm) { _pm = pm; }
+	float GetPopulationSize() const {return _populationSize; }
+	void SetPopulationSize(const float &populationSize) { _populationSize = populationSize; }
+
+	void Crossover(const Algorithm&, Algorithm&, Algorithm&) const;
 };
