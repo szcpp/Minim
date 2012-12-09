@@ -17,7 +17,7 @@ private:
 	unsigned short _chromosomeChild[POPULATION_SIZE];
 	unsigned short _chromosome[POPULATION_SIZE]; // byc moze przerobic na tablice dynamiczna?
 	unsigned long _maximumIterationCount;
-	const float DR = 100*sqrt(2)/pow(2,CHROMOSOME_LENGTH);
+	const float _dR;
 public:
 	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount);
 	~Algorithm(){}

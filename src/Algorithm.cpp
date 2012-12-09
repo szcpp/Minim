@@ -6,7 +6,8 @@ Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSiz
 		_pc(pc),
 		_pm(pm),
 		_populationSize(populationSize),
-		_maximumIterationCount(maximumIteractionCount)
+		_maximumIterationCount(maximumIteractionCount),
+		_dR(100*sqrt(2)/pow(2,CHROMOSOME_LENGTH))
 {
 	NormalizeFitness(); //początkowa normalizacja funkcji celu
 	for(unsigned int iter = 0; iter < _populationSize; ++iter)
@@ -53,13 +54,13 @@ void Algorithm::NormalizeFitness()
 {
 	float C = 0;
 	for(unsigned int iter = 0; iter < pow(2,CHROMOSOME_LENGTH); ++iter)
-		C += _alpha*( pow(sin(iter*DR),2)-0.5 ) / pow( 1+0.001*pow(iter*DR,2) ,2);
+		C += _alpha*( pow(sin(iter*_dR),2)-0.5 ) / pow( 1+0.001*pow(iter*_dR,2) ,2);
 	_beta = (1-C) / (100*sqrt(2));
 }
 
 float Algorithm::GetFitness(unsigned short r)
 {
-	return _alpha*( pow(sin(1.*r*DR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*DR,2),2) + _beta;
+	return _alpha*( pow(sin(1.*r*_dR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*_dR,2),2) + _beta;
 }
 
 void Algorithm::Crossover()
