@@ -8,7 +8,7 @@ BINARY_NAME=minim
 
 CXXFLAGS=-O2 -Wall -pedantic -std=c++11 -I $(DIR_HPP)
 LFLAGS=-lboost_thread -pthread
-OBJS=Algorithm.o ConfigFile.o main.o
+OBJS=Algorithm.o ConfigFile.o main.o MetaAlgorithm.o
 
 # search paths
 vpath %.hpp $(DIR_HPP)

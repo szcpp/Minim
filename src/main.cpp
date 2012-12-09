@@ -22,10 +22,10 @@ int main()
 
 	Algorithm a(
 		configFile.getValueOfKey<float>("alpha"),
-		configFile.getValueOfKey<float>("beta"),
 		configFile.getValueOfKey<float>("pc"),
 		configFile.getValueOfKey<float>("pm"),
-		configFile.getValueOfKey<unsigned short>("population_size"));
+		configFile.getValueOfKey<unsigned short>("population_size"),
+		configFile.getValueOfKey<unsigned long>("maximum_iteration_count"));
 
 	cout << endl << "\tMem size:\t" << (sizeof a)/1000 << "K" << endl;
 

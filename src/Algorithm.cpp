@@ -1,11 +1,12 @@
 #include "Algorithm.hpp"
 
-Algorithm::Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize) : 
+Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIteractionCount) : 
 		_alpha(alpha),
-		_beta(beta),
+		_beta(0),
 		_pc(pc),
 		_pm(pm),
-		_populationSize(populationSize)
+		_populationSize(populationSize),
+		_maximumIterationCount(maximumIteractionCount)
 {
 	for(unsigned int iter = 0; iter < _populationSize; ++iter)
 		_chromosome[iter] = drand48()*pow(2,CHROMOSOME_LENGTH);
@@ -29,7 +30,7 @@ void Algorithm::Reproduce()
 	return;
 }
 
-void Algorithm::InternalCrossover()
+void Algorithm::Crossover()
 {
 	unsigned short position;
 	unsigned short mask;
@@ -46,7 +47,13 @@ void Algorithm::InternalCrossover()
 			}
 }
 
-void Algorithm::Crossover(const Algorithm &parent, Algorithm &child1, Algorithm &child2) const
+void Algorithm::Launch()
 {
-	;
+	// TODO stop condition
+	for(unsigned long i = 0; i < _maximumIterationCount; ++i)
+	{
+		Reproduce();
+		Crossover();
+		Mutate();
+	}
 }

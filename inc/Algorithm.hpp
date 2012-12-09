@@ -12,8 +12,9 @@ private:
 	float _pm;
 	unsigned short _populationSize;
 	unsigned short _chromosome[10000]; // byc moze przerobic na tablice dynamiczna?
+	unsigned long _maximumIterationCount;
 public:
-	Algorithm(float alpha, float beta, float pc, float pm, unsigned int populationSize);
+	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount);
 	~Algorithm(){}
 
 	float GetAlpha() const { return _alpha; }
@@ -24,11 +25,13 @@ public:
 	void SetPc(const float &pc) { _pc = pc; }
 	float GetPm() const {return _pm; }
 	void SetPm(const float &pm) { _pm = pm; }
-	float GetPopulationSize() const {return _populationSize; }
+	unsigned short GetPopulationSize() const {return _populationSize; }
 	void SetPopulationSize(const float &populationSize) { _populationSize = populationSize; }
+	unsigned long GetMaximumIterationCount() const { return _maximumIterationCount; }
+	void SetMaximumIterationCount(unsigned long const &iterationCount) { _maximumIterationCount = iterationCount; }
 
-	void InternalCrossover();
-	void Crossover(const Algorithm&, Algorithm&, Algorithm&) const;
+	void Crossover();
 	void Mutate();
 	void Reproduce();
+	void Launch();
 };

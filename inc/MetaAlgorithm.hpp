@@ -1,0 +1,5 @@
+class MetaAlgorithm
+{
+	MetaAlgorithm(){};
+	~MetaAlgorithm(){};
+};
