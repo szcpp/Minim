@@ -83,11 +83,24 @@ void Algorithm::Crossover()
 void Algorithm::Launch()
 {
 	// TODO stop condition
+	std::fstream file("status.out");
 	for(unsigned long i = 0; i < _maximumIterationCount; ++i)
 	{
 		Reproduce();
 		Crossover();
 		Mutate();
 		std::cout << "i:\t" << i << " /\t" << _maximumIterationCount << std::endl;
+		if(i % 1 == 0)
+		{	
+			float mean = 0;
+			for(int j = 0; j < _populationSize; ++j)
+				mean += _chromosome[j];
+			mean /= _populationSize;
+			file << mean << "\t";
+			for(int j = 0; j < _populationSize; ++j)
+				file << _chromosome[j] << "\t";
+			file << std::endl;
+		}
 	}
+	file.close();
 }

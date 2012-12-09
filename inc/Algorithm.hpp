@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <fstream>
 
 #define CHROMOSOME_LENGTH 10
 #define POPULATION_SIZE 10000
