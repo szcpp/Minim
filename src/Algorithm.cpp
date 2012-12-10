@@ -80,9 +80,11 @@ void Algorithm::Crossover()
 			}
 }
 
-void Algorithm::Launch()
+void Algorithm::Launch(int stepDraw)
 {
 	// TODO stop condition
+	Plot *plot;
+	if(stepDraw) plot = new Plot(0, _dR*pow(2,CHROMOSOME_LENGTH), 100);
 	std::fstream file("status.out");
 	for(unsigned long i = 0; i < _maximumIterationCount; ++i)
 	{
@@ -101,6 +103,8 @@ void Algorithm::Launch()
 				file << _chromosome[j] << "\t";
 			file << std::endl;
 		}
+		if(stepDraw != 0 && i%stepDraw == 0)
+			plot->DrawHist(_populationSize, i, _chromosome);
 	}
 	file.close();
 }

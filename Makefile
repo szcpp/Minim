@@ -6,19 +6,19 @@ DIR_TMP=./tmp/
 
 BINARY_NAME=minim
 
-CXXFLAGS=-O2 -Wall -pedantic -std=c++11 -I $(DIR_HPP)
+CXXFLAGS=-O2 -Wall -pedantic -std=c++11 -I $(DIR_HPP) -I /usr/include/plplot
 LFLAGS=-lboost_thread -pthread
-OBJS=Algorithm.o ConfigFile.o main.o MetaAlgorithm.o
+OBJS=Algorithm.o ConfigFile.o main.o MetaAlgorithm.o Plot.o
 
 # search paths
 vpath %.hpp $(DIR_HPP)
 vpath %.cpp $(DIR_CPP)
 # vpath %.o $(DIR_OBJ) # wtf - does not work
 
-zest: $(OBJS)
+minim: $(OBJS)
 	echo -e "\033[01;33m[make]\033[00;32m Linking all files..."
 	echo -e "\033[01;33m[make]\033[01;36m $(addprefix $(DIR_OBJ), $^) \t\033[00;31m$(LFLAGS)\033[00m"
-	$(CXX) $(LFLAGS) $(addprefix $(DIR_OBJ), $^) -o $(DIR_BIN)$(BINARY_NAME)
+	$(CXX) $(LFLAGS) $(addprefix $(DIR_OBJ), $^) -o $(DIR_BIN)$(BINARY_NAME) `pkg-config --cflags --libs plplotd-c++`
 	ln -s -f $(DIR_BIN)$(BINARY_NAME) ./$(BINARY_NAME)
 	echo -e "\033[01;33m[make]\033[01;36m $(DIR_BIN)$(BINARY_NAME) \033[00;32m has been built successfully. \033[00m"
 

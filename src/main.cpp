@@ -28,7 +28,7 @@ int main()
 
 	cout << endl << "\tMem size:\t" << (sizeof a)/1000 << "K" << endl;
 
-	a.Launch();
+	a.Launch(configFile.getValueOfKey<int>("step_draw"));
 
 	return 0;
 }

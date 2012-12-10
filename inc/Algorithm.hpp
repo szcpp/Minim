@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <fstream>
+#include "Plot.hpp"
 
 #define CHROMOSOME_LENGTH 10
 #define POPULATION_SIZE 10000
@@ -39,7 +40,7 @@ public:
 	void Crossover();
 	void Mutate();
 	void Reproduce();
-	void Launch();
+	void Launch(int stepDraw);
 	void NormalizeFitness();
 	float GetFitness(unsigned short r);
 };
