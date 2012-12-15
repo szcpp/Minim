@@ -1,7 +1,7 @@
 #include "Plot.hpp"
 using namespace std;
 
-Plot::Plot(float alpha, float pc, float pm, unsigned short population_size, unsigned long maximum_iteration_count, QWidget* parent): _alg( alpha, pc, pm, population_size, maximum_iteration_count), QwtPlot( parent )
+Plot::Plot(float alpha, float pc, float pm, unsigned short population_size, unsigned long maximum_iteration_count, int stepDraw): _alg( alpha, pc, pm, population_size, maximum_iteration_count), _stepDraw(stepDraw), QwtPlot()
 {
 	//kodowanie polskich znaków
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8")); 
@@ -11,7 +11,7 @@ Plot::Plot(float alpha, float pc, float pm, unsigned short population_size, unsi
 	cout << endl << "\tMem size:\t" << (sizeof _alg)/1000 << "K" << endl;
 
 	//ustawienia osi, tytułów okna wykresu
-	setTitle( "Ostatnia generacja" );
+	setTitle( " " );
 	setAxisTitle( xBottom, "r" );
 	axisMaxMajor(xBottom);
 	setAxisTitle( yLeft, "Liczba reprezentantów" );
@@ -31,9 +31,22 @@ Plot::Plot(float alpha, float pc, float pm, unsigned short population_size, unsi
 	p->setPen( QPen( Qt::green ) );
 	p->setBrush( QBrush( Qt::green ) );
 	p->attach( this );
+
+	future = new QFuture<void>;
+	//watcher = new QFutureWatcher<void>; //czy to się nam kiedyś przyda? ...
+
+	//podłączenie sygnału informującego o zmianie wykresu
+	connect(this, SIGNAL(changed()), this, SLOT(changePlot()));
+}
+void Plot::changePlot()
+{
+	this->replot();
+	stringstream title;
+	title<<"Generacja "<<_nr;
+	setTitle(QString(title.str().c_str()));
 }
 
-void Plot::DrawHist()
+void Plot::DrawHist(int nr)
 {
 	//wypełnianie histogramu danymi z populacji
 	unsigned short dd[binN];
@@ -51,19 +64,25 @@ void Plot::DrawHist()
 	QVector<QwtIntervalSample> data;
 	for(int iterBin = 0; iterBin < binN; ++iterBin)
 		data.append(QwtIntervalSample( dd[iterBin], step*iterBin+minR, step*(iterBin+1)+minR ));
+	//ustawianie danych
 	p->setSamples(data);
 	p->attach( this );
-	this->replot(); 
-}
 
+	_nr = nr;
+	//emisja sygnału
+	emit changed();
+
+}
 
 void Plot::Launch()
 {
-	LaunchAlg(1);
+	//uruchomienie magicznego wątku niezależnego od gui
+	*future = QtConcurrent::run(this, &Plot::LaunchAlg);
+   //watcher->setFuture(*future); //potrzebne np do pobrania wyników końcowych
 	return;
 }
 
-void Plot::LaunchAlg(int stepDraw)
+void Plot::LaunchAlg()
 {
 	// TODO stop condition
 	std::fstream file("status.out");
@@ -84,10 +103,7 @@ void Plot::LaunchAlg(int stepDraw)
 				file << _alg._chromosome[j] << "\t";
 			file << std::endl;
 		}
-		if(stepDraw != 0 && i%stepDraw == 0) 
-		{
-			DrawHist();
-		}
+		if(_stepDraw != 0 && i%_stepDraw == 0) DrawHist(i+1);
 	}
 	file.close();
 }

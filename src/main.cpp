@@ -33,13 +33,13 @@ int main(int argc, char *argv[])
 		configFile.getValueOfKey<float>("pc"),
 		configFile.getValueOfKey<float>("pm"),
 		configFile.getValueOfKey<unsigned short>("population_size"),
-		configFile.getValueOfKey<unsigned long>("maximum_iteration_count"));
-
+		configFile.getValueOfKey<unsigned long>("maximum_iteration_count"),
+		configFile.getValueOfKey<int>("step_draw"));
 	//Przyciski
 	QPushButton* quit = new QPushButton("Quit", &all);
 	quit->setFont(QFont("Times", 18, QFont::Bold));
 	QObject::connect(quit, SIGNAL(clicked()), &app, SLOT(quit()));
-	QPushButton* draw = new QPushButton("Draw", &all);
+	QPushButton* draw = new QPushButton("Minimalizuj", &all);
 	draw->setFont(QFont("Times", 18, QFont::Bold));
 	QObject::connect(draw, SIGNAL(clicked()), &plot, SLOT(Launch()));
 
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 	all.setLayout(mainLayout);
 	all.show();
 	all.resize(600,600);
+
 
 	//QLabel *label = new QLabel(QApplication::translate("windowlayout", "Name:"));
 	//QLineEdit *lineEdit = new QLineEdit();
