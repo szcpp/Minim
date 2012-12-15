@@ -1,20 +1,31 @@
 #ifndef _PLOT_HPP
 #define _PLOT_HPP
 
-#include "plstream.h"
-#include <sstream>
+//#include <sstream>
+#include <QWidget>
+#include <qwt_plot_histogram.h>
+#include <qwt_plot.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_series_data.h>
+#include <QTextCodec>
+#include "Algorithm.hpp"
 
-class Plot
+class Plot : public QwtPlot
 {
+     Q_OBJECT 
 public:
-	Plot(float min, float max, int bin);
-	~Plot(){delete pls;}
-	void DrawHist(int liczba, int gen, unsigned short* dane); // przyjmuje liczbę punktów do umieszczenia i tablicę wartości
+	Plot(float alpha, float pc, float pm, unsigned short population_size, unsigned long maximum_iteration_count, QWidget* parent = NULL);
+	~Plot(){}
+public slots:
+	void Launch();
 private:
-	plstream* pls;
-	PLFLT minR; // minimum osi poziomej
-	PLFLT maxR; // maksimum osi poziomej
-	PLINT binN; // liczba binów
+	float minR; // minimum osi poziomej
+	float maxR; // maksimum osi poziomej
+	int binN; // liczba binów
+	Algorithm _alg;
+	void LaunchAlg(int stepDraw);
+	void DrawHist();
+	QwtPlotHistogram* p;
 };
 
 #endif

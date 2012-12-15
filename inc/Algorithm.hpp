@@ -1,8 +1,10 @@
+#ifndef _ALGORITHM_HPP
+#define _ALGORITHM_HPP
+
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
 #include <fstream>
-#include "Plot.hpp"
 
 #define CHROMOSOME_LENGTH 10
 #define POPULATION_SIZE 10000
@@ -14,13 +16,14 @@ private:
 	float _beta;
 	float _pc;
 	float _pm;
-	const unsigned short _populationSize;
 	float _roulette[POPULATION_SIZE];
 	unsigned short _chromosomeChild[POPULATION_SIZE];
-	unsigned short _chromosome[POPULATION_SIZE]; // byc moze przerobic na tablice dynamiczna?
-	unsigned long _maximumIterationCount;
 	const float _dR;
 public:
+	const unsigned short _populationSize;
+	unsigned long _maximumIterationCount;
+	unsigned short _chromosome[POPULATION_SIZE];
+
 	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount);
 	~Algorithm(){}
 
@@ -33,6 +36,7 @@ public:
 	float GetPm() const {return _pm; }
 	void SetPm(const float &pm) { _pm = pm; }
 	unsigned short GetPopulationSize() const {return _populationSize; }
+	float GetdR() const {return _dR; }
 	// void SetPopulationSize(const float &populationSize) { _populationSize = populationSize; }
 	unsigned long GetMaximumIterationCount() const { return _maximumIterationCount; }
 	void SetMaximumIterationCount(unsigned long const &iterationCount) { _maximumIterationCount = iterationCount; }
@@ -40,7 +44,8 @@ public:
 	void Crossover();
 	void Mutate();
 	void Reproduce();
-	void Launch(int stepDraw);
 	void NormalizeFitness();
 	float GetFitness(unsigned short r);
 };
+
+#endif
