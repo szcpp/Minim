@@ -2,3 +2,4 @@ minim
 tmp/*
 bin/*
 *.out
+*~

@@ -9,6 +9,7 @@
 #include <qwt_series_data.h>
 #include <QTextCodec>
 #include <QThread>
+#include <qt.h>
 #include <QtConcurrentRun>
 #include <QFuture>
 #include <QFutureWatcher>

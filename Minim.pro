@@ -5,16 +5,16 @@
 TEMPLATE = app
 CONFIG   -= app_bundle
 CONFIG   += console
-TARGET = Minim
+TARGET = minim
 OBJECTS_DIR = tmp
 DEPENDPATH += . inc src
-INCLUDEPATH += . inc /usr/include/qwt #plplot
+INCLUDEPATH += . inc /usr/include/qwt /usr/include/plplot
 
 
 QT       += core gui svg 
 
 
-LIBS += -lqwt #plplotcxxd -lplplotd -lltdl -ldl -lm -lcsirocsa -lqsastime
+LIBS += -lqwt -lplplotcxxd -lplplotd -lltdl -ldl -lm -lcsirocsa -lqsastime
 
 # Input
 HEADERS += inc/Algorithm.hpp \
