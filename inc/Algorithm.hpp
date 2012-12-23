@@ -1,5 +1,5 @@
-#ifndef _ALGORITHM_HPP
-#define _ALGORITHM_HPP
+#ifndef _ALGORITHM_HPP_
+#define _ALGORITHM_HPP_
 
 #include <iostream>
 #include <cstdlib>
@@ -7,10 +7,11 @@
 #include <fstream>
 
 #define CHROMOSOME_LENGTH 10
-#define POPULATION_SIZE 10000
+#define POPULATION_SIZE 1000
 
 class Algorithm
 {
+	friend class Plot;
 private:
 	float _alpha;
 	float _beta;
@@ -19,12 +20,15 @@ private:
 	float _roulette[POPULATION_SIZE];
 	unsigned short _chromosomeChild[POPULATION_SIZE];
 	const float _dR;
-public:
 	const unsigned short _populationSize;
 	unsigned long _maximumIterationCount;
 	unsigned short _chromosome[POPULATION_SIZE];
-
-	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount);
+	const unsigned short _stepCheck;
+	unsigned short _histogram[POPULATION_SIZE];
+	float _result;
+	unsigned short _numberOfSteps;
+public:
+	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount, unsigned short stepCheck);
 	~Algorithm(){}
 
 	float GetAlpha() const { return _alpha; }
@@ -36,16 +40,20 @@ public:
 	float GetPm() const {return _pm; }
 	void SetPm(const float &pm) { _pm = pm; }
 	unsigned short GetPopulationSize() const {return _populationSize; }
-	float GetdR() const {return _dR; }
+	const float& GetdR() const { return _dR; }
 	// void SetPopulationSize(const float &populationSize) { _populationSize = populationSize; }
 	unsigned long GetMaximumIterationCount() const { return _maximumIterationCount; }
 	void SetMaximumIterationCount(unsigned long const &iterationCount) { _maximumIterationCount = iterationCount; }
+	float GetResult() const {return _result;}
+	unsigned short GetNumberOfSteps() const { return _numberOfSteps; }
 
 	void Crossover();
 	void Mutate();
 	void Reproduce();
 	void NormalizeFitness();
-	float GetFitness(unsigned short r);
+	float GetFitness(const unsigned short& r) const;
+	bool IsConverged();
+	void Launch(const int stepDraw = 0);
 };
 
 #endif

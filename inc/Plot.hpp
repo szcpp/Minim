@@ -1,5 +1,5 @@
-#ifndef _PLOT_HPP
-#define _PLOT_HPP
+#ifndef _PLOT_HPP_
+#define _PLOT_HPP_
 
 #include <sstream>
 #include <QWidget>
@@ -14,12 +14,13 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include "Algorithm.hpp"
+#include "MetaAlgorithm.hpp"
 
 class Plot : public QwtPlot
 {
      Q_OBJECT 
 public:
-	Plot(float alpha, float pc, float pm, unsigned short population_size, unsigned long maximum_iteration_count, int stepDraw);
+	Plot(MetaAlgorithm& ,unsigned const int );
 	~Plot(){}
 public slots:
 	void Launch();
@@ -27,13 +28,13 @@ public slots:
 signals:
 	void changed();
 private:
+	int _stepDraw;
+	MetaAlgorithm _alg;
 	float minR; // minimum osi poziomej
 	float maxR; // maksimum osi poziomej
 	int binN; // liczba binów
-	int _stepDraw;
 	int _nr;
-	Algorithm _alg;
-	void DrawHist(int nr);
+	void DrawHist(const Algorithm&, int nr);
 	QwtPlotHistogram* p;
    QFuture<void> *future;
    QFutureWatcher<void> *watcher;

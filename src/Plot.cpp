@@ -1,7 +1,7 @@
 #include "Plot.hpp"
 using namespace std;
 
-Plot::Plot(float alpha, float pc, float pm, unsigned short population_size, unsigned long maximum_iteration_count, int stepDraw): _alg( alpha, pc, pm, population_size, maximum_iteration_count), _stepDraw(stepDraw), QwtPlot()
+Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw): _stepDraw(stepDraw), _alg( algorithm ), QwtPlot()
 {
 	//kodowanie polskich znaków
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8")); 
@@ -46,17 +46,18 @@ void Plot::changePlot()
 	setTitle(QString(title.str().c_str()));
 }
 
-void Plot::DrawHist(int nr)
+void Plot::DrawHist(const Algorithm& algorithm, int nr)
 {
+	// TODO do przerobienia pod metaalgorytm
 	//wypełnianie histogramu danymi z populacji
 	unsigned short dd[binN];
 	const float step=(maxR-minR)/binN;
 	for(int iterBin = 0; iterBin < binN; ++iterBin) dd[iterBin]=0;
-	for(int iterPop = 0; iterPop < _alg._populationSize; ++iterPop)
+	for(int iterPop = 0; iterPop < algorithm._populationSize; ++iterPop)
 	{
 		for(int iterBin = 0; iterBin < binN; ++iterBin)
 		{
-			if(_alg._chromosome[iterPop] >= step*iterBin+minR && _alg._chromosome[iterPop] < step*(iterBin+1)+minR )
+			if(algorithm._chromosome[iterPop] >= step*iterBin+minR && algorithm._chromosome[iterPop] < step*(iterBin+1)+minR )
 				dd[iterBin]++;
 		}
 	}
@@ -84,27 +85,6 @@ void Plot::Launch()
 
 void Plot::LaunchAlg()
 {
-	// TODO stop condition
-	std::fstream file("status.out");
-	for(unsigned long i = 0; i < _alg._maximumIterationCount; ++i)
-	{
-		_alg.Reproduce();
-		_alg.Crossover();
-		_alg.Mutate();
-		std::cout << "i:\t" << i+1 << " /\t" << _alg._maximumIterationCount << std::endl;
-		if(i % 1 == 0)
-		{	
-			float mean = 0;
-			for(int j = 0; j < _alg._populationSize; ++j)
-				mean += _alg._chromosome[j];
-			mean /= _alg._populationSize;
-			file << mean << "\t";
-			for(int j = 0; j < _alg._populationSize; ++j)
-				file << _alg._chromosome[j] << "\t";
-			file << std::endl;
-		}
-		if(_stepDraw != 0 && i%_stepDraw == 0) DrawHist(i+1);
-	}
-	file.close();
+	_alg.Launch();
 }
 
