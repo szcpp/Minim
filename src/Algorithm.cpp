@@ -5,7 +5,7 @@ Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSiz
 		_beta(0),
 		_pc(pc),
 		_pm(pm),
-		_dR(100*sqrt(2)/pow(2,CHROMOSOME_LENGTH)),
+		_dR(100*sqrt(2)/MAXIMUM_CHROMOSOME_VALUE),
 		_populationSize(populationSize),
 		_maximumIterationCount(maximumIteractionCount),
 		_stepCheck(stepCheck),
@@ -14,7 +14,7 @@ Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSiz
 {
 	NormalizeFitness(); //początkowa normalizacja funkcji celu
 	for(unsigned int iter = 0; iter < _populationSize; ++iter)
-		_chromosome[iter] = drand48()*pow(2,CHROMOSOME_LENGTH);
+		_chromosome[iter] = drand48()*MAXIMUM_CHROMOSOME_VALUE;
 }
 
 void Algorithm::Mutate()
@@ -39,7 +39,6 @@ void Algorithm::Reproduce()
 
 	for(i = 0; i < _populationSize; ++i)
 	{
-		_histogram[i] = 0;
 		do
 		{
 			j = round(drand48()*_populationSize);
@@ -57,7 +56,7 @@ void Algorithm::Reproduce()
 void Algorithm::NormalizeFitness()
 {
 	float C = 0;
-	for(unsigned int iter = 0; iter < pow(2,CHROMOSOME_LENGTH); ++iter)
+	for(unsigned int iter = 0; iter < MAXIMUM_CHROMOSOME_VALUE; ++iter)
 		C += _alpha*( pow(sin(iter*_dR),2)-0.5 ) / pow( 1+0.001*pow(iter*_dR,2) ,2);
 	_beta = (1-C) / (100*sqrt(2));
 }
@@ -86,7 +85,7 @@ void Algorithm::Crossover()
 
 void Algorithm::Launch(const int stepDraw)
 {
-	_numberOfSteps = 0;
+	_numberOfSteps = -1;
 	std::fstream file("status.out");
 	for(unsigned long i = 0; i < _maximumIterationCount; ++i)
 	{
@@ -119,15 +118,17 @@ void Algorithm::Launch(const int stepDraw)
 		// if(stepDraw != 0 && i%_stepDraw == 0) DrawHist(i+1);
 	}
 	file.close();
-	if(_numberOfSteps == 0)
+	if(_numberOfSteps == -1)
 		_numberOfSteps = _maximumIterationCount;
 }
 
 bool Algorithm::IsConverged()
 {
+	for(int i = 0; i < MAXIMUM_CHROMOSOME_VALUE; ++i)
+		_histogram[i] = 0;
 	for(unsigned int i = 0; i < _populationSize; ++i)
 		++_histogram[_chromosome[i]];
-	for(unsigned int i = 0; i < _populationSize; ++i)
+	for(unsigned int i = 0; i < MAXIMUM_CHROMOSOME_VALUE; ++i)
 		if(_histogram[i] >= 0.6*_populationSize)
 		{
 			_result = 1.*i*_dR;

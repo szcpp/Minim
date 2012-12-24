@@ -7,6 +7,7 @@
 #include <fstream>
 
 #define CHROMOSOME_LENGTH 10
+#define MAXIMUM_CHROMOSOME_VALUE 1024 // 2^CHROMOSOME_LENGTH
 #define POPULATION_SIZE 1000
 
 class Algorithm
@@ -24,9 +25,9 @@ private:
 	unsigned long _maximumIterationCount;
 	unsigned short _chromosome[POPULATION_SIZE];
 	const unsigned short _stepCheck;
-	unsigned short _histogram[POPULATION_SIZE];
+	unsigned short _histogram[MAXIMUM_CHROMOSOME_VALUE];
 	float _result;
-	unsigned short _numberOfSteps;
+	short _numberOfSteps;
 public:
 	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount, unsigned short stepCheck);
 	~Algorithm(){}
@@ -44,6 +45,7 @@ public:
 	// void SetPopulationSize(const float &populationSize) { _populationSize = populationSize; }
 	unsigned long GetMaximumIterationCount() const { return _maximumIterationCount; }
 	void SetMaximumIterationCount(unsigned long const &iterationCount) { _maximumIterationCount = iterationCount; }
+	unsigned short GetStepCheck() const {return _stepCheck;}
 	float GetResult() const {return _result;}
 	unsigned short GetNumberOfSteps() const { return _numberOfSteps; }
 
