@@ -39,7 +39,7 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 
 	//podłączenie sygnału informującego o zmianie wykresu
 	connect(this, SIGNAL(changed()), this, SLOT(changePlot()));
-	//connect(&_alg, SIGNAL(replot()), this, SLOT(changePlot()));
+	connect(&_alg, SIGNAL(replot()), this, SLOT(changePlot()));
 
 	QVBoxLayout *Layout = new QVBoxLayout();
 	Layout->addWidget(&_pmPlot);	
@@ -48,14 +48,14 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 }
 void Plot::changePlot()
 {
-	DrawHist(_alg,2);
+	DrawHist(2);
 	_pmPlot.replot();
 	stringstream title;
 	title<<"Generacja "<<_nr;
 	_pmPlot.setTitle(QString(title.str().c_str()));
 }
 
-void Plot::DrawHist(const MetaAlgorithm& metaAlgorithm, int nr)
+void Plot::DrawHist(int nr)
 {
 	//wypełnianie histogramu danymi z populacji
 	unsigned short int ddPm[_binN], 
@@ -67,13 +67,13 @@ void Plot::DrawHist(const MetaAlgorithm& metaAlgorithm, int nr)
 		ddPm[iterBin]=0;
 		ddPc[iterBin]=0;
 	}
-	for(int iterPop = 0; iterPop < metaAlgorithm.GetPopulationSize(); ++iterPop)
+	for(int iterPop = 0; iterPop < _alg.GetPopulationSize(); ++iterPop)
 	{
 		for(int iterBin = 0; iterBin < _binN; ++iterBin)
 		{
-			if(metaAlgorithm.GetAlgPm(iterPop) >= stepPm*iterBin+_minPm && metaAlgorithm.GetAlgPm(iterPop) < stepPm*(iterBin+1)+_minPm )
+			if(_alg.GetAlgPm(iterPop) >= stepPm*iterBin+_minPm && _alg.GetAlgPm(iterPop) < stepPm*(iterBin+1)+_minPm )
 				ddPm[iterBin]++;
-			if(metaAlgorithm.GetAlgPc(iterPop) >= stepPc*iterBin+_minPc && metaAlgorithm.GetAlgPc(iterPop) < stepPc*(iterBin+1)+_minPc )
+			if(_alg.GetAlgPc(iterPop) >= stepPc*iterBin+_minPc && _alg.GetAlgPc(iterPop) < stepPc*(iterBin+1)+_minPc )
 				ddPc[iterBin]++;
 		}
 	}

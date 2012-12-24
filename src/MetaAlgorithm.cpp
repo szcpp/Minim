@@ -59,7 +59,7 @@ void MetaAlgorithm::Launch()
 				}
 				pm_file << std::endl;
 				pc_file << std::endl;
-				//emit replot();
+				emit replot();
 			}
 		}
 		#endif

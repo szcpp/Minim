@@ -29,7 +29,7 @@ public slots:
 signals:
 	void changed();
 private:
-	MetaAlgorithm _alg;
+	MetaAlgorithm& _alg;
 	float _minPm,
 			_maxPm,
 			_minPc,
@@ -42,7 +42,7 @@ private:
 	QwtPlot _pmPlot,
 				_pcPlot;
    QFuture<void>* _future;
-	void DrawHist(const MetaAlgorithm&, int);
+	void DrawHist(int);
 	void LaunchAlg();
 };
 #endif
