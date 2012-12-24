@@ -28,9 +28,11 @@ void MetaAlgorithm::Launch()
 		for(unsigned int i = 0; i < _m_populationSize; ++i)
 		{
 			_algorithms[i]->Launch();
+			_generation = j;
 			std::cout << "Iteracja " << j << " Algorytm " << i+1 << ":" << std::endl << "\tr=\t" << _algorithms[i]->GetResult() << "\t\tkrokow:\t" << _algorithms[i]->GetNumberOfSteps() << std::endl;
 			std::cout << "\tpc:\t" << _algorithms[i]->GetPc() << "\tpm:\t" << _algorithms[i]->GetPm() << std::endl << std::endl;
 		}
+		emit replot();
 		Reproduce();
 		Crossover();
 		Mutate();
@@ -59,7 +61,6 @@ void MetaAlgorithm::Launch()
 				}
 				pm_file << std::endl;
 				pc_file << std::endl;
-				emit replot();
 			}
 		}
 		#endif
@@ -199,7 +200,7 @@ bool MetaAlgorithm::IsConverged()
 	}
 	for(unsigned int i = 0; i < META_MAXIMUM_CHROMOSOME_VALUE; ++i)
 	{
-		std::cout << _m_populationSize << ">> " << i << " :: " << _histogramPm[i] << " @@@ " << _histogramPc[i] << std::endl;
+		//std::cout << _m_populationSize << ">> " << i << " :: " << _histogramPm[i] << " @@@ " << _histogramPc[i] << std::endl;
 		if(_histogramPm[i] >= 0.6*_m_populationSize)
 			IsConvergedPm = true;
 		if(_histogramPc[i] >= 0.6*_m_populationSize)

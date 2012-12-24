@@ -38,7 +38,6 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 	_future = new QFuture<void>;
 
 	//podłączenie sygnału informującego o zmianie wykresu
-	connect(this, SIGNAL(changed()), this, SLOT(changePlot()));
 	connect(&_alg, SIGNAL(replot()), this, SLOT(changePlot()));
 
 	QVBoxLayout *Layout = new QVBoxLayout();
@@ -48,11 +47,13 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 }
 void Plot::changePlot()
 {
-	DrawHist(2);
+	DrawHist(_alg.GetGeneration()	);
 	_pmPlot.replot();
+	_pcPlot.replot();
 	stringstream title;
 	title<<"Generacja "<<_nr;
 	_pmPlot.setTitle(QString(title.str().c_str()));
+	_pcPlot.setTitle(QString(title.str().c_str()));
 }
 
 void Plot::DrawHist(int nr)
@@ -92,9 +93,6 @@ void Plot::DrawHist(int nr)
 	_pcHist->attach( &_pcPlot );
 
 	_nr = nr;
-	//emisja sygnału
-	emit changed();
-
 }
 
 void Plot::Launch()

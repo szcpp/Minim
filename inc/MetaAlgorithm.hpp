@@ -22,7 +22,8 @@ private:
 		_m_populationSize,
 		_populationSize,
 		_m_stepCheck,
-		_stepCheck;
+		_stepCheck,
+		_generation;
 	long
 		_meta_maximumIterationCount,
 		_maximumIterationCount;
@@ -47,6 +48,7 @@ public:
 	unsigned short int GetPopulationSize() const {return _m_populationSize;}
 	float GetAlgPm(int index) const {return _algorithms[index]->GetPm();}
 	float GetAlgPc(int index) const {return _algorithms[index]->GetPc();}
+	float GetGeneration() const {return _generation;}
 };
 
 #endif

@@ -26,8 +26,6 @@ public:
 public slots:
 	void Launch();
 	void changePlot();
-signals:
-	void changed();
 private:
 	MetaAlgorithm& _alg;
 	float _minPm,
