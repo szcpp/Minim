@@ -30,6 +30,9 @@ public:
 	~MetaAlgorithm(){};
 
 	void Launch();
+	unsigned short int GetPopulationSize() const {return _m_populationSize;}
+	float GetAlgPm(int index) const {return _algorithms[index]->GetPm();}
+	float GetAlgPc(int index) const {return _algorithms[index]->GetPc();}
 };
 
 #endif
