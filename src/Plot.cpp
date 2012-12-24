@@ -23,7 +23,7 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw): _stepDraw(ste
 	
 	//parametry histogramu
 	minR=0.; 
-	maxR=pow(2,CHROMOSOME_LENGTH);
+	maxR=0.01;
 	binN=100;
 	
 	//rysowanie histogramu
@@ -46,18 +46,19 @@ void Plot::changePlot()
 	setTitle(QString(title.str().c_str()));
 }
 
-void Plot::DrawHist(const Algorithm& algorithm, int nr)
+void Plot::DrawHist(const MetaAlgorithm& metaAlgorithm, int nr)
 {
 	// TODO do przerobienia pod metaalgorytm
 	//wypełnianie histogramu danymi z populacji
-	unsigned short dd[binN];
+	unsigned short int dd[binN];
 	const float step=(maxR-minR)/binN;
 	for(int iterBin = 0; iterBin < binN; ++iterBin) dd[iterBin]=0;
-	for(int iterPop = 0; iterPop < algorithm._populationSize; ++iterPop)
+	for(int iterPop = 0; iterPop < metaAlgorithm.GetPopulationSize(); ++iterPop)
 	{
 		for(int iterBin = 0; iterBin < binN; ++iterBin)
 		{
-			if(algorithm._chromosome[iterPop] >= step*iterBin+minR && algorithm._chromosome[iterPop] < step*(iterBin+1)+minR )
+			cout<<metaAlgorithm.GetAlgPm(iterPop)<<endl;
+			if(metaAlgorithm.GetAlgPm(iterPop) >= step*iterBin+minR && metaAlgorithm.GetAlgPm(iterPop) < step*(iterBin+1)+minR )
 				dd[iterBin]++;
 		}
 	}
@@ -86,5 +87,6 @@ void Plot::Launch()
 void Plot::LaunchAlg()
 {
 	_alg.Launch();
+	DrawHist(_alg,2);
 }
 

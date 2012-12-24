@@ -34,7 +34,7 @@ private:
 	float maxR; // maksimum osi poziomej
 	int binN; // liczba binów
 	int _nr;
-	void DrawHist(const Algorithm&, int nr);
+	void DrawHist(const MetaAlgorithm&, int nr);
 	QwtPlotHistogram* p;
    QFuture<void> *future;
    QFutureWatcher<void> *watcher;
