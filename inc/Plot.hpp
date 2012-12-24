@@ -13,14 +13,15 @@
 #include <QtConcurrentRun>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QVBoxLayout>
 #include "Algorithm.hpp"
 #include "MetaAlgorithm.hpp"
 
-class Plot : public QwtPlot
+class Plot : public QWidget
 {
      Q_OBJECT 
 public:
-	Plot(MetaAlgorithm& ,unsigned const int );
+	Plot(MetaAlgorithm& ,unsigned const int, float, float);
 	~Plot(){}
 public slots:
 	void Launch();
@@ -28,16 +29,20 @@ public slots:
 signals:
 	void changed();
 private:
-	int _stepDraw;
 	MetaAlgorithm _alg;
-	float minR; // minimum osi poziomej
-	float maxR; // maksimum osi poziomej
-	int binN; // liczba binów
-	int _nr;
-	void DrawHist(const MetaAlgorithm&, int nr);
-	QwtPlotHistogram* p;
-   QFuture<void> *future;
-   QFutureWatcher<void> *watcher;
+	float _minPm,
+			_maxPm,
+			_minPc,
+			_maxPc;
+	int _binN,
+		_nr,
+		_stepDraw;
+	QwtPlotHistogram* _pmHist,
+						* _pcHist;
+	QwtPlot _pmPlot,
+				_pcPlot;
+   QFuture<void>* _future;
+	void DrawHist(const MetaAlgorithm&, int);
 	void LaunchAlg();
 };
 #endif

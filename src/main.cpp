@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	//start okienka
 	QApplication app(argc, argv);
 	QWidget all;
-	Plot plot(metaAlgorithm, configFile.getValueOfKey<int>("step_draw"));
+	Plot plot(metaAlgorithm, configFile.getValueOfKey<int>("step_draw"), configFile.getValueOfKey<float>("pc"), configFile.getValueOfKey<float>("pm"));
 
 	//Przyciski
 	QPushButton* quit = new QPushButton("Quit", &all);
