@@ -1,7 +1,7 @@
 #include "Plot.hpp"
 using namespace std;
 
-Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,float _maxPm): _stepDraw(stepDraw), _alg( algorithm ), _binN(100), _minPm(0), _maxPm(_maxPm), _minPc(0), _maxPc(_maxPc), _pmPlot(), _pcPlot()
+Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,float _maxPm): _stepDraw(stepDraw), _alg( algorithm ), _binN(100), _minPm(0), _maxPm(_maxPm), _minPc(0), _maxPc(_maxPc),  _minPreview(0), _maxPreview(pow(2,CHROMOSOME_LENGTH)), _pmPlot(), _pcPlot(), _previewPlot()
 {
 	//kodowanie polskich znaków
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8")); 
@@ -24,6 +24,12 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 	_pcPlot.setAxisTitle( _pcPlot.yLeft, "liczba reprezentantów" );
 	_pcPlot.axisAutoScale(_pcPlot.yLeft);
 	_pcPlot.canvas()->setPalette( canvasPalette ); 
+	_previewPlot.setTitle( " " );
+	_previewPlot.setAxisTitle( _pmPlot.xBottom, "r" );
+	_previewPlot.axisMaxMajor(_pmPlot.xBottom);
+	_previewPlot.setAxisTitle( _pmPlot.yLeft, "liczba reprezentantów" );
+	_previewPlot.axisAutoScale(_pmPlot.yLeft);
+	_previewPlot.canvas()->setPalette( canvasPalette );
 		
 	//rysowanie histogramu
 	_pmHist = new QwtPlotHistogram( "histogramPm" );
@@ -34,26 +40,44 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 	_pcHist->setPen( QPen( Qt::green ) );
 	_pcHist->setBrush( QBrush( Qt::green ) );
 	_pcHist->attach( &_pcPlot );
+	_previewHist = new QwtPlotHistogram( "histogramAlg" );
+	_previewHist->setPen( QPen( Qt::green ) );
+	_previewHist->setBrush( QBrush( Qt::green ) );
+	_previewHist->attach( &_previewPlot );
 
 	_future = new QFuture<void>;
 
 	//podłączenie sygnału informującego o zmianie wykresu
-	connect(&_alg, SIGNAL(replot()), this, SLOT(changePlot()));
+	connect(&_alg, SIGNAL(replotMAG()), this, SLOT(ChangePlots()));
+	connect(&_alg, SIGNAL(replotAG()), this, SLOT(ChangePlotPreview()));
 
 	QVBoxLayout *Layout = new QVBoxLayout();
 	Layout->addWidget(&_pmPlot);	
 	Layout->addWidget(&_pcPlot);	
 	this->setLayout(Layout);
 }
-void Plot::changePlot()
+void Plot::Preview()
 {
-	DrawHist(_alg.GetGeneration()	);
+	_previewPlot.show();
+	_previewPlot.setGeometry(650,100,500,400);
+}
+void Plot::ChangePlots()
+{
+	DrawHist(_alg.GetGenerationMAG()	);
 	_pmPlot.replot();
 	_pcPlot.replot();
 	stringstream title;
-	title<<"Generacja "<<_nr;
+	title<<"Generacja "<<_nrGenMAG;
 	_pmPlot.setTitle(QString(title.str().c_str()));
 	_pcPlot.setTitle(QString(title.str().c_str()));
+}
+void Plot::ChangePlotPreview()
+{
+	DrawHistPreview(_alg.GetGenerationAG());
+	_previewPlot.replot();
+	stringstream title;
+	title<<"Algorytm "<<_nrAG;
+	_previewPlot.setTitle(QString(title.str().c_str()));
 }
 
 void Plot::DrawHist(int nr)
@@ -92,7 +116,35 @@ void Plot::DrawHist(int nr)
 	_pcHist->setSamples(dataPc);
 	_pcHist->attach( &_pcPlot );
 
-	_nr = nr;
+	_nrGenMAG = nr;
+}
+
+void Plot::DrawHistPreview(int nr)
+{
+	//wypełnianie histogramu danymi z populacji
+	unsigned short int ddPreview[_binN];
+	const float stepPreview=(_maxPreview-_minPreview)/_binN;
+	for(int iterBin = 0; iterBin < _binN; ++iterBin)
+		ddPreview[iterBin]=0;
+	for(int iterPop = 0; iterPop < _alg.GetAGPopulationSize(); ++iterPop)
+	{
+		for(int iterBin = 0; iterBin < _binN; ++iterBin)
+		{
+			if(_alg.GetAlgChromosome(nr, iterPop) >= stepPreview*iterBin+_minPreview && _alg.GetAlgChromosome(nr, iterPop) < stepPreview*(iterBin+1)+_minPreview )
+				ddPreview[iterBin]++;
+		}
+	}
+	//przepisywanie na format odczytywalny przez qwt
+	QVector<QwtIntervalSample> dataPreview;
+	for(int iterBin = 0; iterBin < _binN; ++iterBin)
+	{
+		dataPreview.append(QwtIntervalSample( ddPreview[iterBin], stepPreview*iterBin+_minPreview, stepPreview*(iterBin+1)+_minPreview ));
+	}
+	//ustawianie danych
+	_previewHist->setSamples(dataPreview);
+	_previewHist->attach( &_previewPlot );
+
+	_nrAG = nr;
 }
 
 void Plot::Launch()

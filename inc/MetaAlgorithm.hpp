@@ -23,7 +23,8 @@ private:
 		_populationSize,
 		_m_stepCheck,
 		_stepCheck,
-		_generation;
+		_generationMAG,
+		_generationAG;
 	long
 		_meta_maximumIterationCount,
 		_maximumIterationCount;
@@ -33,7 +34,10 @@ private:
 	unsigned short _histogramPc[META_MAXIMUM_CHROMOSOME_VALUE];
 	unsigned short _histogramPm[META_MAXIMUM_CHROMOSOME_VALUE];
 signals:
-	void replot();
+	void replotMAG();
+	void replotAG();
+public slots:
+	void replotSigAG();
 public:
 	MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_populationSize, long meta_maximumIterationCount, unsigned short m_stepCheck, float alpha, float pc, float pm, unsigned short int populationSize, long maximumIterationCount, unsigned short stepCheck);
 	~MetaAlgorithm(){};
@@ -46,9 +50,12 @@ public:
 	float GetFitness(unsigned short int);
 	bool IsConverged();
 	unsigned short int GetPopulationSize() const {return _m_populationSize;}
+	unsigned short int GetAGPopulationSize() const {std::cout<< _populationSize<<std::endl;return _populationSize;}
 	float GetAlgPm(int index) const {return _algorithms[index]->GetPm();}
 	float GetAlgPc(int index) const {return _algorithms[index]->GetPc();}
-	float GetGeneration() const {return _generation;}
+	float GetGenerationMAG() const {return _generationMAG;}
+	float GetGenerationAG() const {return _generationAG;}
+	unsigned short int GetAlgChromosome(int indexMAG, int indexAG) const {return _algorithms[indexMAG]->GetChromosome(indexAG);}
 };
 
 #endif

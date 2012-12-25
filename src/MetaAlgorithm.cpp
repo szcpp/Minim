@@ -17,8 +17,13 @@ MetaAlgorithm::MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_popula
 	{
 		_algorithms[i] = new Algorithm(alpha, pc*round(META_MAXIMUM_CHROMOSOME_VALUE*drand48())/META_MAXIMUM_CHROMOSOME_VALUE, pm*round(META_MAXIMUM_CHROMOSOME_VALUE*drand48())/META_MAXIMUM_CHROMOSOME_VALUE, populationSize, maximumIterationCount, _stepCheck);
 	}
+	for(int index = 0; index < _m_populationSize; ++index )
+		connect(_algorithms[index], SIGNAL(replotAG()), this, SLOT(replotSigAG()));
 };
-
+void MetaAlgorithm::replotSigAG()
+{
+	emit replotAG();
+}
 void MetaAlgorithm::Launch()
 {
 	std::fstream pm_file("status_pm.out");
@@ -27,12 +32,13 @@ void MetaAlgorithm::Launch()
 	{	
 		for(unsigned int i = 0; i < _m_populationSize; ++i)
 		{
+			_generationMAG = j;
+			_generationAG = i;
 			_algorithms[i]->Launch();
-			_generation = j;
 			std::cout << "Iteracja " << j << " Algorytm " << i+1 << ":" << std::endl << "\tr=\t" << _algorithms[i]->GetResult() << "\t\tkrokow:\t" << _algorithms[i]->GetNumberOfSteps() << std::endl;
 			std::cout << "\tpc:\t" << _algorithms[i]->GetPc() << "\tpm:\t" << _algorithms[i]->GetPm() << std::endl << std::endl;
 		}
-		emit replot();
+		emit replotMAG();
 		Reproduce();
 		Crossover();
 		Mutate();

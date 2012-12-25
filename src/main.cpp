@@ -48,19 +48,23 @@ int main(int argc, char *argv[])
 	Plot plot(metaAlgorithm, configFile.getValueOfKey<int>("step_draw"), configFile.getValueOfKey<float>("pc"), configFile.getValueOfKey<float>("pm"));
 
 	//Przyciski
-	QPushButton* quit = new QPushButton("Quit", &all);
-	quit->setFont(QFont("Times", 18, QFont::Bold));
-	QObject::connect(quit, SIGNAL(clicked()), &app, SLOT(quit()));
-	QPushButton* draw = new QPushButton("Minimalizuj", &all);
+	QPushButton* draw = new QPushButton("Start", &all);
 	draw->setFont(QFont("Times", 18, QFont::Bold));
 	QObject::connect(draw, SIGNAL(clicked()), &plot, SLOT(Launch()));
+	QPushButton* preview = new QPushButton("Podgląd", &all);
+	preview->setFont(QFont("Times", 18, QFont::Bold));
+	QObject::connect(preview, SIGNAL(clicked()), &plot, SLOT(Preview()));
+	QPushButton* quit = new QPushButton("Zakończ", &all);
+	quit->setFont(QFont("Times", 18, QFont::Bold));
+	QObject::connect(quit, SIGNAL(clicked()), &app, SLOT(quit()));
 
 	//layouty
 	QVBoxLayout *mainLayout = new QVBoxLayout();
 	QHBoxLayout *buttonsLayout = new QHBoxLayout();
 	QWidget* buttons = new QWidget();
-	buttonsLayout->addWidget(quit);
 	buttonsLayout->addWidget(draw);
+	buttonsLayout->addWidget(preview);
+	buttonsLayout->addWidget(quit);
 	buttons->setLayout(buttonsLayout);
 	mainLayout->addWidget(buttons);
 	mainLayout->addWidget(&plot);

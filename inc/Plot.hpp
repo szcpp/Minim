@@ -25,22 +25,30 @@ public:
 	~Plot(){}
 public slots:
 	void Launch();
-	void changePlot();
+	void Preview();
+	void ChangePlots();
+	void ChangePlotPreview();
 private:
 	MetaAlgorithm& _alg;
 	float _minPm,
 			_maxPm,
 			_minPc,
-			_maxPc;
+			_maxPc,
+			_minPreview,
+			_maxPreview;
 	int _binN,
-		_nr,
+		_nrGenMAG,
+		_nrAG,
 		_stepDraw;
 	QwtPlotHistogram* _pmHist,
-						* _pcHist;
+						* _pcHist,
+						* _previewHist;
 	QwtPlot _pmPlot,
-				_pcPlot;
+				_pcPlot,
+				_previewPlot;
    QFuture<void>* _future;
 	void DrawHist(int);
+	void DrawHistPreview(int);
 	void LaunchAlg();
 };
 #endif

@@ -92,6 +92,7 @@ void Algorithm::Launch(const int stepDraw)
 		Reproduce();
 		Crossover();
 		Mutate();
+		emit replotAG();
 		// if 50% of population is "somewhere", finish
 		if(i % _stepCheck == 0)
 			if(IsConverged())

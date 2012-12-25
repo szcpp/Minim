@@ -5,13 +5,15 @@
 #include <cstdlib>
 #include <cmath>
 #include <fstream>
+#include <QObject>
 
 #define CHROMOSOME_LENGTH 10
 #define MAXIMUM_CHROMOSOME_VALUE 1024 // 2^CHROMOSOME_LENGTH
 #define POPULATION_SIZE 1000
 
-class Algorithm
+class Algorithm: public QObject
 {
+	Q_OBJECT
 	friend class Plot;
 private:
 	float _alpha;
@@ -28,6 +30,8 @@ private:
 	unsigned short _histogram[MAXIMUM_CHROMOSOME_VALUE];
 	float _result;
 	short _numberOfSteps;
+signals:
+	void replotAG();
 public:
 	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount, unsigned short stepCheck);
 	~Algorithm(){}
@@ -54,6 +58,7 @@ public:
 	void Reproduce();
 	void NormalizeFitness();
 	float GetFitness(const unsigned short& r) const;
+	unsigned short int GetChromosome(int index) const {return _chromosome[index];}
 	bool IsConverged();
 	void Launch(const int stepDraw = 0);
 };
