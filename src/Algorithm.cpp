@@ -68,19 +68,36 @@ float Algorithm::GetFitness(const unsigned short &r) const
 
 void Algorithm::Crossover()
 {
-	unsigned short position;
-	unsigned short mask;
-	unsigned short tmp = 0;
-	for(unsigned short i = 0; i < _populationSize; ++i)
-		for(unsigned short j = 0; j < _populationSize; ++j)
-			if(drand48() < _pc)
-			{
-				position = floor(drand48()*(CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
-				mask = pow(2, position+1) - 1;
-				tmp = _chromosome[i] & mask;
-				_chromosome[i] = (_chromosome[i] & ~mask) | (_chromosome[j] & mask);
-				_chromosome[j] = (_chromosome[j] & ~mask) | tmp;
-			}
+	unsigned short 
+		position,
+		mask,
+		tmp = 0,
+		i = 0,
+		j = 0,
+		k = 0;
+
+	for(i = 0, j = 0, k = 0; i < _populationSize/2; ++i)
+		if(drand48() < _pc)
+		{
+			j = 2*i+1;
+			k = 2*i;
+			position = floor(drand48()*(CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
+			mask = pow(2, position+1) - 1;
+			tmp = _chromosome[k] & mask;
+			_chromosome[k] = (_chromosome[k] & ~mask) | (_chromosome[j] & mask);
+			_chromosome[j] = (_chromosome[j] & ~mask) | tmp;
+		}
+
+	// for(unsigned short i = 0; i < _populationSize; ++i)
+	// 	for(unsigned short j = 0; j < _populationSize; ++j)
+	// 		if(drand48() < _pc)
+	// 		{
+	// 			position = floor(drand48()*(CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
+	// 			mask = pow(2, position+1) - 1;
+	// 			tmp = _chromosome[i] & mask;
+	// 			_chromosome[i] = (_chromosome[i] & ~mask) | (_chromosome[j] & mask);
+	// 			_chromosome[j] = (_chromosome[j] & ~mask) | tmp;
+	// 		}
 }
 
 void Algorithm::Launch(const int stepDraw)

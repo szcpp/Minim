@@ -96,35 +96,37 @@ void MetaAlgorithm::Crossover()
 		chromosomeJ,
 		tmp = 0,
 		i,
-		j;
-	for(i = 0; i < _m_populationSize; ++i)
-		for(j = 0; j < _m_populationSize; ++j)
+		j,
+		k;
+	for(k = 0; k < _m_populationSize/2; ++k)
+	{
+		if(drand48() < _m_pc)
 		{
-			if(drand48() < _m_pc)
-			{
-				// pc part
-				position = floor(drand48()*(META_CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
-				mask = pow(2, position+1) - 1;
-				chromosomeI = ExtractChromosome(_algorithms[i]->GetPc(),_pc);
-				chromosomeJ = ExtractChromosome(_algorithms[j]->GetPc(),_pc);
-				tmp = chromosomeI & mask;
-				chromosomeI = (chromosomeI & ~mask) | (chromosomeJ & mask);
-				chromosomeJ = (chromosomeJ & ~mask) | tmp;
-				_algorithms[i]->SetPc(_pc*chromosomeI/META_MAXIMUM_CHROMOSOME_VALUE);
-				_algorithms[j]->SetPc(_pc*chromosomeJ/META_MAXIMUM_CHROMOSOME_VALUE);
+			i = 2*k;
+			j = 2*k+1;
+			// pc part
+			position = floor(drand48()*(META_CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
+			mask = pow(2, position+1) - 1;
+			chromosomeI = ExtractChromosome(_algorithms[i]->GetPc(),_pc);
+			chromosomeJ = ExtractChromosome(_algorithms[j]->GetPc(),_pc);
+			tmp = chromosomeI & mask;
+			chromosomeI = (chromosomeI & ~mask) | (chromosomeJ & mask);
+			chromosomeJ = (chromosomeJ & ~mask) | tmp;
+			_algorithms[i]->SetPc(_pc*chromosomeI/META_MAXIMUM_CHROMOSOME_VALUE);
+			_algorithms[j]->SetPc(_pc*chromosomeJ/META_MAXIMUM_CHROMOSOME_VALUE);
 
-				// pm part
-				position = floor(drand48()*(META_CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
-				mask = pow(2, position+1) - 1;
-				chromosomeI = ExtractChromosome(_algorithms[i]->GetPm(),_pm);
-				chromosomeJ = ExtractChromosome(_algorithms[j]->GetPm(),_pm);
-				tmp = chromosomeI & mask;
-				chromosomeI = (chromosomeI & ~mask) | (chromosomeJ & mask);
-				chromosomeJ = (chromosomeJ & ~mask) | tmp;
-				_algorithms[i]->SetPm(_pm*chromosomeI/META_MAXIMUM_CHROMOSOME_VALUE);
-				_algorithms[j]->SetPm(_pm*chromosomeJ/META_MAXIMUM_CHROMOSOME_VALUE);
-			}
+			// pm part
+			position = floor(drand48()*(META_CHROMOSOME_LENGTH-1))+1; // position can be only from 1-9 range
+			mask = pow(2, position+1) - 1;
+			chromosomeI = ExtractChromosome(_algorithms[i]->GetPm(),_pm);
+			chromosomeJ = ExtractChromosome(_algorithms[j]->GetPm(),_pm);
+			tmp = chromosomeI & mask;
+			chromosomeI = (chromosomeI & ~mask) | (chromosomeJ & mask);
+			chromosomeJ = (chromosomeJ & ~mask) | tmp;
+			_algorithms[i]->SetPm(_pm*chromosomeI/META_MAXIMUM_CHROMOSOME_VALUE);
+			_algorithms[j]->SetPm(_pm*chromosomeJ/META_MAXIMUM_CHROMOSOME_VALUE);
 		}
+	}
 }
 
 void MetaAlgorithm::Mutate()

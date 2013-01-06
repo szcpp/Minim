@@ -1,7 +1,7 @@
 #include "Plot.hpp"
 using namespace std;
 
-Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,float _maxPm): _stepDraw(stepDraw), _alg( algorithm ), _binN(100), _minPm(0), _maxPm(_maxPm), _minPc(0), _maxPc(_maxPc),  _minPreview(0), _maxPreview(pow(2,CHROMOSOME_LENGTH)), _pmPlot(), _pcPlot(), _previewPlot()
+Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,float _maxPm): _stepDraw(stepDraw), _alg( algorithm ), _binN(1024), _minPm(0), _maxPm(_maxPm), _minPc(0), _maxPc(_maxPc),  _minPreview(0), _maxPreview(pow(2,CHROMOSOME_LENGTH)), _pmPlot(), _pcPlot(), _previewPlot()
 {
 	//kodowanie polskich znaków
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8")); 
