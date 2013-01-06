@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
 		configFile.getValueOfKey<unsigned long>("maximum_iteration_count"),
 		configFile.getValueOfKey<unsigned short>("step_check"));
 
-	cout << "rysuje" << endl;
 	//start okienka
 	QApplication app(argc, argv);
 	QWidget all;
@@ -57,6 +56,7 @@ int main(int argc, char *argv[])
 	QPushButton* quit = new QPushButton("Zakończ", &all);
 	quit->setFont(QFont("Times", 18, QFont::Bold));
 	QObject::connect(quit, SIGNAL(clicked()), &app, SLOT(quit()));
+	QObject::connect(quit, SIGNAL(clicked()), &plot, SLOT(Stop()));
 
 	//layouty
 	QVBoxLayout *mainLayout = new QVBoxLayout();

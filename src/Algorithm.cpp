@@ -115,8 +115,6 @@ void Algorithm::Launch(const int stepDraw)
 			file << std::endl;
 		}
 	#endif
-		// TODO: zmontować tutaj callback
-		// if(stepDraw != 0 && i%_stepDraw == 0) DrawHist(i+1);
 	}
 	file.close();
 	if(_numberOfSteps == -1)

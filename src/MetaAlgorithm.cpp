@@ -29,9 +29,11 @@ void MetaAlgorithm::Launch()
 	std::fstream pm_file("status_pm.out");
 	std::fstream pc_file("status_pc.out");
 	for(unsigned int j = 0; j < _meta_maximumIterationCount; ++j)
-	{	
+	{
+		if(_programOpened == false) break;
 		for(unsigned int i = 0; i < _m_populationSize; ++i)
 		{
+			if(_programOpened == false) break;
 			_generationMAG = j;
 			_generationAG = i;
 			_algorithms[i]->Launch();
@@ -42,6 +44,8 @@ void MetaAlgorithm::Launch()
 		Reproduce();
 		Crossover();
 		Mutate();
+		for(int index = 0; index < _m_populationSize; ++index )
+			connect(_algorithms[index], SIGNAL(replotAG()), this, SLOT(replotSigAG()));
 		if(j % _m_stepCheck == 0)
 			if(IsConverged())
 				break;

@@ -50,6 +50,7 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 	//podłączenie sygnału informującego o zmianie wykresu
 	connect(&_alg, SIGNAL(replotMAG()), this, SLOT(ChangePlots()));
 	connect(&_alg, SIGNAL(replotAG()), this, SLOT(ChangePlotPreview()));
+	connect(this, SIGNAL(StopAlgorithm()), &_alg, SLOT(StopAlgorithm()));
 
 	QVBoxLayout *Layout = new QVBoxLayout();
 	Layout->addWidget(&_pmPlot);	
@@ -58,8 +59,17 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 }
 void Plot::Preview()
 {
-	_previewPlot.show();
-	_previewPlot.setGeometry(650,100,500,400);
+	if(_previewOpened)
+	{
+		_previewPlot.hide();
+		_previewOpened = false;
+	}
+	else
+	{
+		_previewPlot.show();
+		_previewPlot.setGeometry(650,100,500,400);
+		_previewOpened = true;
+	}
 }
 void Plot::ChangePlots()
 {
@@ -149,8 +159,13 @@ void Plot::DrawHistPreview(int nr)
 
 void Plot::Launch()
 {
-	//uruchomienie magicznego wątku niezależnego od gui
-	*_future = QtConcurrent::run(this, &Plot::LaunchAlg);
+	if(_programOpened == false)
+	{
+		*_future = QtConcurrent::run(this, &Plot::LaunchAlg);	//uruchomienie magicznego wątku niezależnego od gui
+		_alg.SetActiveLaunch();
+		_programOpened = true;
+	}
+	else emit StopAlgorithm();
 	return;
 }
 

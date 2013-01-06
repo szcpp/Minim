@@ -28,7 +28,7 @@ private:
 	long
 		_meta_maximumIterationCount,
 		_maximumIterationCount;
-
+	bool _programOpened;
 	Algorithm *_algorithms[META_POPULATION_SIZE];
 	float _roulette[META_POPULATION_SIZE];
 	unsigned short _histogramPc[META_MAXIMUM_CHROMOSOME_VALUE];
@@ -38,6 +38,7 @@ signals:
 	void replotAG();
 public slots:
 	void replotSigAG();
+	void StopAlgorithm(){_programOpened = false;}
 public:
 	MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_populationSize, long meta_maximumIterationCount, unsigned short m_stepCheck, float alpha, float pc, float pm, unsigned short int populationSize, long maximumIterationCount, unsigned short stepCheck);
 	~MetaAlgorithm(){};
@@ -47,10 +48,11 @@ public:
 	void Launch();
 	void Mutate();
 	void Reproduce();
+	void SetActiveLaunch(){_programOpened = true;}
 	float GetFitness(unsigned short int);
 	bool IsConverged();
 	unsigned short int GetPopulationSize() const {return _m_populationSize;}
-	unsigned short int GetAGPopulationSize() const {std::cout<< _populationSize<<std::endl;return _populationSize;}
+	unsigned short int GetAGPopulationSize() const {return _populationSize;}
 	float GetAlgPm(int index) const {return _algorithms[index]->GetPm();}
 	float GetAlgPc(int index) const {return _algorithms[index]->GetPc();}
 	float GetGenerationMAG() const {return _generationMAG;}

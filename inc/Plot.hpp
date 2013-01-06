@@ -23,11 +23,14 @@ class Plot : public QWidget
 public:
 	Plot(MetaAlgorithm& ,unsigned const int, float, float);
 	~Plot(){}
+signals:
+	void StopAlgorithm();
 public slots:
 	void Launch();
 	void Preview();
 	void ChangePlots();
 	void ChangePlotPreview();
+	void Stop(){emit StopAlgorithm();}
 private:
 	MetaAlgorithm& _alg;
 	float _minPm,
@@ -40,6 +43,8 @@ private:
 		_nrGenMAG,
 		_nrAG,
 		_stepDraw;
+	bool _previewOpened,
+			_programOpened;
 	QwtPlotHistogram* _pmHist,
 						* _pcHist,
 						* _previewHist;
