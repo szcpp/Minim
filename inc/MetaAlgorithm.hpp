@@ -33,6 +33,7 @@ private:
 	float _roulette[META_POPULATION_SIZE];
 	unsigned short _histogramPc[META_MAXIMUM_CHROMOSOME_VALUE];
 	unsigned short _histogramPm[META_MAXIMUM_CHROMOSOME_VALUE];
+	float _exponentialFactor;
 signals:
 	void replotMAG();
 	void replotAG();
@@ -40,7 +41,7 @@ public slots:
 	void replotSigAG();
 	void StopAlgorithm(){_programOpened = false;}
 public:
-	MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_populationSize, long meta_maximumIterationCount, unsigned short m_stepCheck, float alpha, float pc, float pm, unsigned short int populationSize, long maximumIterationCount, unsigned short stepCheck);
+	MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_populationSize, long meta_maximumIterationCount, unsigned short m_stepCheck, float alpha, float pc, float pm, unsigned short int populationSize, long maximumIterationCount, unsigned short stepCheck, float exponentialFactor);
 	~MetaAlgorithm(){};
 
 	static unsigned short ExtractChromosome(const float& value, const float& maximum);

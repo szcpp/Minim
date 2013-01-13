@@ -1,6 +1,6 @@
 #include "MetaAlgorithm.hpp"
 
-MetaAlgorithm::MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_populationSize, long meta_maximumIterationCount, unsigned short m_stepCheck, float alpha, float pc, float pm, unsigned short int populationSize, long maximumIterationCount, unsigned short stepCheck) :
+MetaAlgorithm::MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_populationSize, long meta_maximumIterationCount, unsigned short m_stepCheck, float alpha, float pc, float pm, unsigned short int populationSize, long maximumIterationCount, unsigned short stepCheck, float exponentialFactor) :
 	_m_pc(m_pc),
 	_m_pm(m_pm),
 	_alpha(alpha),
@@ -11,11 +11,13 @@ MetaAlgorithm::MetaAlgorithm(float m_pc, float m_pm, unsigned short int m_popula
 	_m_stepCheck(m_stepCheck),
 	_stepCheck(stepCheck),
 	_meta_maximumIterationCount(meta_maximumIterationCount),
-	_maximumIterationCount(maximumIterationCount)
+	_maximumIterationCount(maximumIterationCount),
+	_exponentialFactor(exponentialFactor)
+
 {
 	for(unsigned int i = 0; i < _m_populationSize; ++i)
 	{
-		_algorithms[i] = new Algorithm(alpha, pc*round(META_MAXIMUM_CHROMOSOME_VALUE*drand48())/META_MAXIMUM_CHROMOSOME_VALUE, pm*round(META_MAXIMUM_CHROMOSOME_VALUE*drand48())/META_MAXIMUM_CHROMOSOME_VALUE, populationSize, maximumIterationCount, _stepCheck);
+		_algorithms[i] = new Algorithm(alpha, pc*round(META_MAXIMUM_CHROMOSOME_VALUE*drand48())/META_MAXIMUM_CHROMOSOME_VALUE, pm*round(META_MAXIMUM_CHROMOSOME_VALUE*drand48())/META_MAXIMUM_CHROMOSOME_VALUE, populationSize, maximumIterationCount, _stepCheck, _exponentialFactor);
 	}
 	for(int index = 0; index < _m_populationSize; ++index )
 		connect(_algorithms[index], SIGNAL(replotAG()), this, SLOT(replotSigAG()));
@@ -175,7 +177,8 @@ void MetaAlgorithm::Reproduce()
 				_algorithms[j]->GetPm(),
 				_algorithms[j]->GetPopulationSize(),
 				_algorithms[j]->GetMaximumIterationCount(),
-				_algorithms[j]->GetStepCheck()
+				_algorithms[j]->GetStepCheck(),
+				_algorithms[j]->GetExponentialFactor()
 			);
 	}
 
@@ -192,6 +195,8 @@ float MetaAlgorithm::GetFitness(unsigned short int index)
 	// 	return 1000;
 	// else
 	// 	return 1./_algorithms[index]->GetNumberOfSteps();
+	if(_algorithms[index]->GetResult() != 0)
+		return 0;
 	if(_algorithms[index]->GetNumberOfSteps() > 80)
 		return 0;
 	if(_algorithms[index]->GetNumberOfSteps() == 0)

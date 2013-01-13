@@ -30,10 +30,11 @@ private:
 	unsigned short _histogram[MAXIMUM_CHROMOSOME_VALUE];
 	float _result;
 	short _numberOfSteps;
+	float _exponentialFactor;
 signals:
 	void replotAG();
 public:
-	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount, unsigned short stepCheck);
+	Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIterationCount, unsigned short stepCheck, float exponentialFactor);
 	~Algorithm(){}
 
 	float GetAlpha() const { return _alpha; }
@@ -52,6 +53,8 @@ public:
 	unsigned short GetStepCheck() const {return _stepCheck;}
 	float GetResult() const {return _result;}
 	unsigned short GetNumberOfSteps() const { return _numberOfSteps; }
+	float GetExponentialFactor() const { return _exponentialFactor; }
+	void SetExponentialFactor(float const &exponentialFactor){ _exponentialFactor = exponentialFactor;}
 
 	void Crossover();
 	void Mutate();

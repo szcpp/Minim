@@ -1,6 +1,6 @@
 #include "Algorithm.hpp"
 
-Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIteractionCount, unsigned short stepCheck) : 
+Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSize, long maximumIteractionCount, unsigned short stepCheck, float exponentialFactor) : 
 		_alpha(alpha),
 		_beta(0),
 		_pc(pc),
@@ -10,7 +10,8 @@ Algorithm::Algorithm(float alpha, float pc, float pm, unsigned int populationSiz
 		_maximumIterationCount(maximumIteractionCount),
 		_stepCheck(stepCheck),
 		_result(0),
-		_numberOfSteps(0)
+		_numberOfSteps(0),
+		_exponentialFactor(exponentialFactor)
 {
 	NormalizeFitness(); //początkowa normalizacja funkcji celu
 	for(unsigned int iter = 0; iter < _populationSize; ++iter)
@@ -63,7 +64,7 @@ void Algorithm::NormalizeFitness()
 
 float Algorithm::GetFitness(const unsigned short &r) const
 {
-	return _alpha*( pow(sin(1.*r*_dR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*_dR,2),2) + _beta;
+	return (_alpha*( pow(sin(1.*r*_dR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*_dR,2),2) + _beta)*exp(-r/2);
 }
 
 void Algorithm::Crossover()

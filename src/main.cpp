@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
 		configFile.getValueOfKey<float>("pm"),
 		configFile.getValueOfKey<unsigned short>("population_size"),
 		configFile.getValueOfKey<unsigned long>("maximum_iteration_count"),
-		configFile.getValueOfKey<unsigned short>("step_check"));
+		configFile.getValueOfKey<unsigned short>("step_check"),
+		configFile.getValueOfKey<unsigned short>("exponential_factor"));
 
 	//start okienka
 	QApplication app(argc, argv);
