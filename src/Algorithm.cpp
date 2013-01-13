@@ -64,7 +64,7 @@ void Algorithm::NormalizeFitness()
 
 float Algorithm::GetFitness(const unsigned short &r) const
 {
-	return (_alpha*( pow(sin(1.*r*_dR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*_dR,2),2) + _beta)*exp(-r/2);
+	return (_alpha*( pow(sin(1.*r*_dR),2)-0.5 ) / pow( 1.+0.001*pow(1.*r*_dR,2),2) + _beta)*exp(-r/_exponentialFactor);
 }
 
 void Algorithm::Crossover()
