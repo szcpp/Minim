@@ -188,10 +188,16 @@ void MetaAlgorithm::Reproduce()
 
 float MetaAlgorithm::GetFitness(unsigned short int index)
 {
+	// if(_algorithms[index]->GetNumberOfSteps() == 0)
+	// 	return 1000;
+	// else
+	// 	return 1./_algorithms[index]->GetNumberOfSteps();
+	if(_algorithms[index]->GetNumberOfSteps() > 80)
+		return 0;
 	if(_algorithms[index]->GetNumberOfSteps() == 0)
 		return 1000;
 	else
-		return 1./_algorithms[index]->GetNumberOfSteps();
+	 	return 3./_algorithms[index]->GetNumberOfSteps()+0.8-_algorithms[index]->GetNumberOfSteps()/100.;
 }
 
 bool MetaAlgorithm::IsConverged()

@@ -56,6 +56,9 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 	Layout->addWidget(&_pmPlot);	
 	Layout->addWidget(&_pcPlot);	
 	this->setLayout(Layout);
+
+	ChangePlots();
+	ChangePlotPreview();
 }
 void Plot::Preview()
 {
@@ -77,7 +80,7 @@ void Plot::ChangePlots()
 	_pmPlot.replot();
 	_pcPlot.replot();
 	stringstream title;
-	title<<"Generacja "<<_nrGenMAG;
+	title<<"Generacja "<<_nrGenMAG+1;
 	_pmPlot.setTitle(QString(title.str().c_str()));
 	_pcPlot.setTitle(QString(title.str().c_str()));
 }
