@@ -3,6 +3,9 @@ using namespace std;
 
 Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,float _maxPm): _stepDraw(stepDraw), _alg( algorithm ), _binN(1024), _minPm(0), _maxPm(_maxPm), _minPc(0), _maxPc(_maxPc),  _minPreview(0), _maxPreview(pow(2,CHROMOSOME_LENGTH)), _pmPlot(), _pcPlot(), _previewPlot()
 {
+	_ddPm = new unsigned short int[_binN];
+	_ddPc = new unsigned short int[_binN];
+
 	//kodowanie polskich znaków
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8")); 
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -44,6 +47,14 @@ Plot::Plot(MetaAlgorithm& algorithm, unsigned const int stepDraw, float _maxPc,f
 	_previewHist->setPen( QPen( Qt::green ) );
 	_previewHist->setBrush( QBrush( Qt::green ) );
 	_previewHist->attach( &_previewPlot );
+	_pmCurrent = new QwtPlotHistogram( "histogramPm" );
+	_pmCurrent->setPen( QPen( Qt::red ) );
+	_pmCurrent->setBrush( QBrush( Qt::red ) );
+	_pmCurrent->attach( &_pmPlot );
+	_pcCurrent = new QwtPlotHistogram( "histogramPc" );
+	_pcCurrent->setPen( QPen( Qt::red ) );
+	_pcCurrent->setBrush( QBrush( Qt::red ) );
+	_pcCurrent->attach( &_pcPlot );
 
 	_future = new QFuture<void>;
 
@@ -88,31 +99,31 @@ void Plot::ChangePlotPreview()
 {
 	DrawHistPreview(_alg.GetGenerationAG());
 	_previewPlot.replot();
+	_pmPlot.replot();
+	_pcPlot.replot();
 	stringstream title;
-	title<<"Algorytm "<<_nrAG;
+	title<<"Algorytm "<<_nrAG+1;
 	_previewPlot.setTitle(QString(title.str().c_str()));
 }
 
 void Plot::DrawHist(int nr)
 {
 	//wypełnianie histogramu danymi z populacji
-	unsigned short int ddPm[_binN], 
-							ddPc[_binN];
 	const float stepPm=(_maxPm-_minPm)/_binN,
 					 stepPc=(_maxPc-_minPc)/_binN;
 	for(int iterBin = 0; iterBin < _binN; ++iterBin)
 	{
-		ddPm[iterBin]=0;
-		ddPc[iterBin]=0;
+		_ddPm[iterBin]=0;
+		_ddPc[iterBin]=0;
 	}
 	for(int iterPop = 0; iterPop < _alg.GetPopulationSize(); ++iterPop)
 	{
 		for(int iterBin = 0; iterBin < _binN; ++iterBin)
 		{
 			if(_alg.GetAlgPm(iterPop) >= stepPm*iterBin+_minPm && _alg.GetAlgPm(iterPop) < stepPm*(iterBin+1)+_minPm )
-				ddPm[iterBin]++;
+				_ddPm[iterBin]++;
 			if(_alg.GetAlgPc(iterPop) >= stepPc*iterBin+_minPc && _alg.GetAlgPc(iterPop) < stepPc*(iterBin+1)+_minPc )
-				ddPc[iterBin]++;
+				_ddPc[iterBin]++;
 		}
 	}
 	//przepisywanie na format odczytywalny przez qwt
@@ -120,15 +131,15 @@ void Plot::DrawHist(int nr)
 										dataPc;
 	for(int iterBin = 0; iterBin < _binN; ++iterBin)
 	{
-		dataPm.append(QwtIntervalSample( ddPm[iterBin], stepPm*iterBin+_minPm, stepPm*(iterBin+1)+_minPm ));
-		dataPc.append(QwtIntervalSample( ddPc[iterBin], stepPc*iterBin+_minPc, stepPc*(iterBin+1)+_minPc ));
+		dataPm.append(QwtIntervalSample( _ddPm[iterBin], stepPm*iterBin+_minPm, stepPm*(iterBin+1)+_minPm ));
+		dataPc.append(QwtIntervalSample( _ddPc[iterBin], stepPc*iterBin+_minPc, stepPc*(iterBin+1)+_minPc ));
+		
 	}
 	//ustawianie danych
 	_pmHist->setSamples(dataPm);
 	_pmHist->attach( &_pmPlot );
 	_pcHist->setSamples(dataPc);
 	_pcHist->attach( &_pcPlot );
-
 	_nrGenMAG = nr;
 }
 
@@ -137,6 +148,8 @@ void Plot::DrawHistPreview(int nr)
 	//wypełnianie histogramu danymi z populacji
 	unsigned short int ddPreview[_binN];
 	const float stepPreview=(_maxPreview-_minPreview)/_binN;
+	const float stepPm=(_maxPm-_minPm)/_binN,
+					 stepPc=(_maxPc-_minPc)/_binN;
 	for(int iterBin = 0; iterBin < _binN; ++iterBin)
 		ddPreview[iterBin]=0;
 	for(int iterPop = 0; iterPop < _alg.GetAGPopulationSize(); ++iterPop)
@@ -148,7 +161,18 @@ void Plot::DrawHistPreview(int nr)
 		}
 	}
 	//przepisywanie na format odczytywalny przez qwt
-	QVector<QwtIntervalSample> dataPreview;
+	QVector<QwtIntervalSample> dataPreview,
+										dataPcCurrent,
+										dataPmCurrent;
+	for(int iterBin = 0; iterBin < _binN; ++iterBin)
+	{
+		if(_alg.GetAlgPm(nr) >= stepPm*iterBin+_minPm && _alg.GetAlgPm(nr) < stepPm*(iterBin+1)+_minPm )
+			if( _ddPm[iterBin] != 0) dataPmCurrent.append(QwtIntervalSample( _ddPm[iterBin], stepPm*iterBin+_minPm, stepPm*(iterBin+1)+_minPm ));
+				else dataPmCurrent.append(QwtIntervalSample( 1, stepPm*iterBin+_minPm, stepPm*(iterBin+1)+_minPm ));
+		if(_alg.GetAlgPc(nr) >= stepPc*iterBin+_minPc && _alg.GetAlgPc(nr) < stepPc*(iterBin+1)+_minPc )
+			if( _ddPc[iterBin] != 0) dataPcCurrent.append(QwtIntervalSample( _ddPc[iterBin], stepPc*iterBin+_minPc, stepPc*(iterBin+1)+_minPc ));
+			else dataPcCurrent.append(QwtIntervalSample( 1, stepPc*iterBin+_minPc, stepPc*(iterBin+1)+_minPc ));
+	}
 	for(int iterBin = 0; iterBin < _binN; ++iterBin)
 	{
 		dataPreview.append(QwtIntervalSample( ddPreview[iterBin], stepPreview*iterBin+_minPreview, stepPreview*(iterBin+1)+_minPreview ));
@@ -156,6 +180,10 @@ void Plot::DrawHistPreview(int nr)
 	//ustawianie danych
 	_previewHist->setSamples(dataPreview);
 	_previewHist->attach( &_previewPlot );
+	_pcCurrent->setSamples(dataPcCurrent);
+	_pcCurrent->attach( &_pcPlot );
+	_pmCurrent->setSamples(dataPmCurrent);
+	_pmCurrent->attach( &_pmPlot );
 
 	_nrAG = nr;
 }

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'MetaAlgorithm.hpp'
 **
-** Created: Mon Jan 7 17:06:57 2013
+** Created: Sun Jan 13 12:29:26 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!

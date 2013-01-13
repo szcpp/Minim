@@ -43,10 +43,14 @@ private:
 		_nrGenMAG,
 		_nrAG,
 		_stepDraw;
+	unsigned short int* _ddPm, 
+							*_ddPc;
 	bool _previewOpened,
 			_programOpened;
 	QwtPlotHistogram* _pmHist,
 						* _pcHist,
+						* _pcCurrent,
+						* _pmCurrent,
 						* _previewHist;
 	QwtPlot _pmPlot,
 				_pcPlot,
